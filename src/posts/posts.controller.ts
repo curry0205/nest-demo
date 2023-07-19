@@ -27,7 +27,7 @@ export class PostsController {
    * 获取所有文章
    */
   @Get()
-  async findAll(@Query() query): Promise<PostsRo> {
+  async findAll(@Query() query) {
     return await this.postsService.findAll(query);
   }
 

@@ -11,11 +11,12 @@ export interface PostsRo {
 export class PostsService {
   constructor(
     @InjectRepository(PostsEntity)
-    private readonly postsRepository: Repository<PostsEntity>,
+    private postsRepository: Repository<PostsEntity>,
   ) {}
 
   // 创建文章
   async create(post: Partial<PostsEntity>): Promise<PostsEntity> {
+    console.log(123);
     const { title } = post;
     if (!title) {
       throw new HttpException('缺少文章标题', 401);
@@ -28,18 +29,20 @@ export class PostsService {
   }
 
   // 获取文章列表
-  async findAll(query): Promise<PostsRo> {
-    const qb = await getRepository(PostsEntity).createQueryBuilder('post');
-    qb.where('1 = 1');
-    qb.orderBy('post.create_time', 'DESC');
+  async findAll(query) {
+    return await this.postsRepository.find(query);
+    // const qb = await getRepository(PostsEntity).createQueryBuilder('post');
+    // qb.where('1 = 1');
+    // qb.orderBy('post.create_time', 'DESC');
+    // console.log(123123123);
+    // const count = await qb.getCount();
+    // const { pageNum = 1, pageSize = 10 } = query;
+    // qb.limit(pageSize);
+    // qb.offset(pageSize * (pageNum - 1));
 
-    const count = await qb.getCount();
-    const { pageNum = 1, pageSize = 10, ...params } = query;
-    qb.limit(pageSize);
-    qb.offset(pageSize * (pageNum - 1));
-
-    const posts = await qb.getMany();
-    return { list: posts, count: count };
+    // const posts = await qb.getMany();
+    // console.log(posts, 'posts', count, 'count');
+    // return { list: posts, count: count };
   }
 
   // 获取指定文章
